@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FireSharp" Version="2.0.4" />
     <PackageReference Include="MySql.Data" Version="9.2.0" />
     <PackageReference Include="NAudio.Lame" Version="2.1.0" />
     <PackageReference Include="NAudio.WaveFormRenderer" Version="2.0.0" />
@@ -16,6 +17,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KMA.SmartHome.Common\KMA.SmartHome.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Firebase">
+      <HintPath>..\..\..\OtherProject\Huyet ap\HealthMonitor\HealthMonitor\bin\Debug\Firebase.dll</HintPath>
+    </Reference>
+    <Reference Include="FireSharp">
+      <HintPath>..\..\..\OtherProject\Huyet ap\HealthMonitor\HealthMonitor\bin\Debug\FireSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

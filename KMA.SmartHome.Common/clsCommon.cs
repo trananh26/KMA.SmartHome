@@ -11,7 +11,7 @@ namespace KMA.SmartHome.Common
         public static string GetMySqlConnectionString()
         {
             string server = "14.225.29.45";
-            string database = "SmartHome";
+            string database = "KMA_SmartHome";
             string user = "root";
             string password = "abc@123ASd";
 

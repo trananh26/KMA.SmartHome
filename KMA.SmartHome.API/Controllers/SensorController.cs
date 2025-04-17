@@ -3,7 +3,7 @@ using KMA.SmartHome.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KMA.SmartHome.API
+namespace KMA.SmartHome.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

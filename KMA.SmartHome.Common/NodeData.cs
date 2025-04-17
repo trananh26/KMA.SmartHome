@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,7 @@ namespace KMA.SmartHome.Common
         public double? Temp { get; set; }
         public double? Hum { get; set; }
         public double? Gas { get; set; }
-        public double? TVOC { get; set; }
-        public double? CO2 { get; set; }
-        public double? AQI { get; set; }
+        public double? Net { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string? UpdateBy { get; set; }
     }
@@ -31,5 +30,17 @@ namespace KMA.SmartHome.Common
     {
         public string? EquipmentID { get; set; }
         public int? EquipmentState { get; set; }
+    }
+
+    public class RealEqiupment
+    {
+        [JsonProperty("Door")]    //Điều hòa
+        public int? Door { get; set; }
+        [JsonProperty("Fan")]    //Điều hòa
+        public int? Fan { get; set; }
+        [JsonProperty("Alarm")]    //Điều hòa
+        public int? Alarm { get; set; }
+        [JsonProperty("Lamp")]    //Điều hòa
+        public int? Lamp { get; set; }
     }
 }

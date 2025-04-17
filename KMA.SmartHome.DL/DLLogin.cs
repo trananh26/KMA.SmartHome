@@ -26,10 +26,8 @@ namespace KMA.SmartHome.DL
                     {
                         UserName = reader["UserName"].ToString(),
                         FullName = reader["FullName"].ToString(),
-                        Position = reader["Position"].ToString(),
                         Address = reader["Address"].ToString(),
-                        PhoneNumber = reader["PhoneNumber"].ToString(),
-                        UserRole = reader["Role"].ToString()
+                        PhoneNumber = reader["PhoneNumber"].ToString()
                     });
                 }
             }
@@ -58,11 +56,7 @@ namespace KMA.SmartHome.DL
                         PhoneNumber = reader["PhoneNumber"].ToString(),
                         DateOfBirth = (DateTime)reader["DateOfBirth"],
                         Address = reader["Address"].ToString(),
-                        ProfilePicture = reader["ProfilePicture"].ToString(),
-                        Position = reader["Position"].ToString(),
-                        Role = reader["Role"].ToString(),
-                        CreatedBy = reader["CreatedBy"].ToString(),
-                        UpdatedAt = (DateTime)reader["UpdatedAt"]
+                        CreatedBy = reader["CreatedBy"].ToString()
                     });
                 }
             }
@@ -84,9 +78,6 @@ namespace KMA.SmartHome.DL
                 cmd.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
                 cmd.Parameters.AddWithValue("@DateOfBirth", user.DateOfBirth);
                 cmd.Parameters.AddWithValue("@Address", user.Address);
-                cmd.Parameters.AddWithValue("@ProfilePicture", user.ProfilePicture);
-                cmd.Parameters.AddWithValue("@Position", user.Position);
-                cmd.Parameters.AddWithValue("@Role", user.Role);
                 cmd.Parameters.AddWithValue("@CreatedBy", user.CreatedBy);
 
                 cmd.ExecuteNonQuery();
