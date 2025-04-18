@@ -13,9 +13,42 @@ namespace KMA.SmartHome.BL
     {
         private static DLEnvironment oDL = new DLEnvironment();
         private static DLControl oDC = new DLControl();
-        public static bool CheckDoor(string password)
+
+
+        public static bool CheckDoor(DoorCheck password)
         {
-            return true;
+
+            ///Kiểm tra mở cửa
+            if (oDL.CheckDoor(password))
+            {
+                Eqiupment eqiupment;
+                eqiupment = new Eqiupment();
+                eqiupment.EquipmentID = "Door";
+                eqiupment.EquipmentState = 1;
+                Control(eqiupment);
+
+                eqiupment = new Eqiupment();
+                eqiupment.EquipmentID = "Lamp";
+                eqiupment.EquipmentState = 1;
+                Control(eqiupment);
+
+
+                //Log lại event
+                return true;
+            }
+            else
+            {
+                //Log lại event
+                LogDataParam param= new LogDataParam();
+                param.ID = Guid.NewGuid().ToString(); 
+                param.LogID = "1";
+                param.UpdateTime=DateTime.Now;
+                param.UpdateBy = "System";
+
+                InsertLog(param);
+
+                return false;
+            }
         }
 
         /// <summary>
@@ -40,6 +73,8 @@ namespace KMA.SmartHome.BL
                 _eq.Alarm = param.EquipmentState;
 
             oDC.Control(_eq);
+
+            //Log event
         }
 
         private static RealEqiupment GetRealEqiupmentState()
@@ -56,11 +91,126 @@ namespace KMA.SmartHome.BL
         {
             oDL.InsertEnvironmentData(param);
             oDC.UpdateEnvironmentData(param);
+
+            //Kiểm tra các cảnh báo
+            if (param.Gas > 600)
+            {
+                // Còi kêu, quạt quay
+                Eqiupment eqiupment;
+                eqiupment = new Eqiupment();
+                eqiupment.EquipmentID = "Fan";
+                eqiupment.EquipmentState = 1;
+                Control(eqiupment);
+
+                eqiupment = new Eqiupment();
+                eqiupment.EquipmentID = "Alarm";
+                eqiupment.EquipmentState = 1;
+                Control(eqiupment);
+
+                //Log lại event
+                LogDataParam log = new LogDataParam();
+                log.ID = Guid.NewGuid().ToString();
+                log.LogID = "2";
+                log.UpdateTime = DateTime.Now;
+                log.UpdateBy = "System";
+
+                InsertLog(log);
+            }
+            if (param.Temp > 30)
+            {
+                //Log lại event
+                LogDataParam log = new LogDataParam();
+                log.ID = Guid.NewGuid().ToString();
+                log.LogID = "3";
+                log.UpdateTime = DateTime.Now;
+                log.UpdateBy = "System";
+
+                InsertLog(log);
+            }
+            if (param.Hum > 80)
+            {
+                //Log lại event
+                LogDataParam log = new LogDataParam();
+                log.ID = Guid.NewGuid().ToString();
+                log.LogID = "4";
+                log.UpdateTime = DateTime.Now;
+                log.UpdateBy = "System";
+
+                InsertLog(log);
+            }
         }
 
-        public static void InsertLog(LogData param)
+        public static void InsertLog(LogDataParam param)
         {
             oDL.InsertLog(param);
+        }
+
+        public static void DoorClose()
+        {
+            Eqiupment eqiupment;
+            eqiupment = new Eqiupment();
+            eqiupment.EquipmentID = "Door";
+            eqiupment.EquipmentState = 0;
+            Control(eqiupment);
+
+            eqiupment = new Eqiupment();
+            eqiupment.EquipmentID = "Lamp";
+            eqiupment.EquipmentState = 0;
+            Control(eqiupment);
+        }
+
+        public static void AlarmStop()
+        {
+            Eqiupment eqiupment;
+            eqiupment = new Eqiupment();
+            eqiupment.EquipmentID = "Fan";
+            eqiupment.EquipmentState = 0;
+            Control(eqiupment);
+
+            eqiupment = new Eqiupment();
+            eqiupment.EquipmentID = "Alarm";
+            eqiupment.EquipmentState = 0;
+            Control(eqiupment);
+
+            //Log lại event
+            LogDataParam param = new LogDataParam();
+            param.ID = Guid.NewGuid().ToString();
+            param.LogID = "6";
+            param.UpdateTime = DateTime.Now;
+            param.UpdateBy = "System";
+
+            InsertLog(param);
+        }
+
+        public static object GetNewAlarm()
+        {
+            var lstLog = oDL.GetNewAlarm();
+            if (lstLog.Count > 0)
+            {
+                return lstLog;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static object GetAlertHistory()
+        {
+            var lstLog = oDL.GetAlertHistory();
+            if (lstLog.Count > 0)
+            {
+                return lstLog;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static void DeleteAlert()
+        {
+            oDL.DeleteAlert();
         }
     }
 }

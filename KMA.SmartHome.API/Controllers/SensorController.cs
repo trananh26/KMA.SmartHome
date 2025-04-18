@@ -39,7 +39,7 @@ namespace KMA.SmartHome.API.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("CheckDoor")]
-        public async Task<IActionResult> CheckDoor([FromBody] string Password)
+        public async Task<IActionResult> CheckDoor([FromBody] DoorCheck Password)
         {
             var Result = new ServiceResult();
             try
@@ -122,7 +122,7 @@ namespace KMA.SmartHome.API.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("Log")]
-        public async Task<IActionResult> InsertLog([FromBody] LogData param)
+        public async Task<IActionResult> InsertLog([FromBody] LogDataParam param)
         {
             var Result = new ServiceResult();
             try
@@ -136,10 +136,99 @@ namespace KMA.SmartHome.API.Controllers
             {
                 Result.OnError("Failed to insert data. Please check the server!", "204");
             }
-
             return new JsonResult(Result);
         }
 
+        [HttpPost("DoorClose")]
+        public async Task<IActionResult> DoorClose()
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                BLEnvironment.DoorClose();
+                Result.OnSuccess(Result.Data, "Success");
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve data. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
 
+        [HttpPost("AlarmStop")]
+        public async Task<IActionResult> AlarmStop()
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                BLEnvironment.AlarmStop();
+                Result.OnSuccess(Result.Data, "Success");
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve data. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
+
+        /// <summary>
+        /// Lấy sanh sách Alarm mới
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetNewAlarm")]
+        public async Task<IActionResult> GetNewAlarm()
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                Result.Data = BLEnvironment.GetNewAlarm();
+                Result.OnSuccess(Result.Data, "Success");
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve data. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
+
+        /// <summary>
+        /// Lấy danh sách thông báo
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAlertHistory")]
+        public async Task<IActionResult> GetAlertHistory()
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                Result.Data = BLEnvironment.GetAlertHistory();
+                Result.OnSuccess(Result.Data, "Success");
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve data. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
+
+        /// <summary>
+        /// Xóa alert khi người dùng đã xem
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("AlertStop")]
+        public async Task<IActionResult> AlertStop()
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                BLEnvironment.DeleteAlert();
+                Result.OnSuccess(Result.Data, "Success");
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve data. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
     }
 }

@@ -18,9 +18,18 @@ namespace KMA.SmartHome.Common
         public string? UpdateBy { get; set; }
     }
 
+    public class LogDataParam
+    {
+        public string? ID { get; set; }
+        public string? LogID { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public string? UpdateBy { get; set; }
+    }
+
     public class LogData
     {
         public string? ID { get; set; }
+        public string? LogID { get; set; }
         public string? Message { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string? UpdateBy { get; set; }
@@ -30,6 +39,10 @@ namespace KMA.SmartHome.Common
     {
         public string? EquipmentID { get; set; }
         public int? EquipmentState { get; set; }
+    }
+    public class DoorCheck
+    {
+        public string? Password { get; set; }
     }
 
     public class RealEqiupment
