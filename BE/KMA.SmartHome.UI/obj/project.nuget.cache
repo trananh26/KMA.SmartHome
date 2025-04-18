@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "g3zsNTeTu5w=",
+  "dgSpecHash": "ENwX74AeVz0=",
   "success": true,
-  "projectFilePath": "D:\\Github\\KMA.SmartHome\\KMA.SmartHome.UI\\KMA.SmartHome.UI.csproj",
+  "projectFilePath": "D:\\Github\\KMA.SmartHome\\BE\\KMA.SmartHome.UI\\KMA.SmartHome.UI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",

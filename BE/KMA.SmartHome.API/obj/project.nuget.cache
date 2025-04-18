@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bkaUwaur6HA=",
+  "dgSpecHash": "fUnpvwuMlD0=",
   "success": true,
-  "projectFilePath": "D:\\Github\\KMA.SmartHome\\KMA.SmartHome.API\\KMA.SmartHome.API.csproj",
+  "projectFilePath": "D:\\Github\\KMA.SmartHome\\BE\\KMA.SmartHome.API\\KMA.SmartHome.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\bouncycastle.cryptography\\2.3.1\\bouncycastle.cryptography.2.3.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\firesharp\\2.0.4\\firesharp.2.0.4.nupkg.sha512",

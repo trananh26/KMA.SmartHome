@@ -1,0 +1,22 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/KMA.SmartHome/v17
+/.vs/KMA.SmartHome/FileContentIndex
+/.vs/KMA.SmartHome/DesignTimeBuild
+/.vs/ProjectEvaluation
+/.vs/TestAPI
+/BE/KMA.SmartHome.API/bin/Debug/net6.0
+/BE/KMA.SmartHome.API/obj/Debug/net6.0
+/KMA.SmartHome.API/obj
+/KMA.SmartHome.BL/bin/Debug/net6.0
+/KMA.SmartHome.BL/obj/Debug/net6.0
+/KMA.SmartHome.BL/obj
+/KMA.SmartHome.Common/bin/Debug/net6.0
+/KMA.SmartHome.Common/obj
+/KMA.SmartHome.DL/bin/Debug/net6.0
+/KMA.SmartHome.DL/obj
+/KMA.SmartHome.UI/bin/Debug/net6.0
+/KMA.SmartHome.UI/obj
+/.vs/KMA.SmartHome/CopilotIndices/17.13.441.19478
