@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\KMA.SmartHome.API.props" />
+</Project>

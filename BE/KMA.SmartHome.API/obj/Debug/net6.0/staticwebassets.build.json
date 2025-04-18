@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "dIYwr4OHtHGnN3JlEwyWPIrJTqjL9wZ9Mzdf/h0J6/c=",
+  "Source": "KMA.SmartHome.API",
+  "BasePath": "_content/KMA.SmartHome.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

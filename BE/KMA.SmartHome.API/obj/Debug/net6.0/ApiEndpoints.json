@@ -1,0 +1,118 @@
+[
+  {
+    "ContainingType": "KMA.SmartHome.API.Controllers.AccountController",
+    "Method": "Login",
+    "RelativePath": "api/Account/Login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "KMA.SmartHome.Common.LoginParam",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KMA.SmartHome.API.Controllers.AccountController",
+    "Method": "Register",
+    "RelativePath": "api/Account/Register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "KMA.SmartHome.Common.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KMA.SmartHome.API.Controllers.AccountController",
+    "Method": "GetUser",
+    "RelativePath": "api/Account/User",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KMA.SmartHome.API.Controllers.SensorController",
+    "Method": "CheckDoor",
+    "RelativePath": "api/Sensor/CheckDoor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Password",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KMA.SmartHome.API.Controllers.SensorController",
+    "Method": "Control",
+    "RelativePath": "api/Sensor/Control",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "KMA.SmartHome.Common.Eqiupment",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KMA.SmartHome.API.Controllers.SensorController",
+    "Method": "GetEnvironmentData",
+    "RelativePath": "api/Sensor/GetEnvironmentData",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KMA.SmartHome.API.Controllers.SensorController",
+    "Method": "InsertEnvironmentData",
+    "RelativePath": "api/Sensor/InsertEnvironmentData",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "KMA.SmartHome.Common.NodeData",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KMA.SmartHome.API.Controllers.SensorController",
+    "Method": "InsertLog",
+    "RelativePath": "api/Sensor/Log",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "KMA.SmartHome.Common.LogData",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
