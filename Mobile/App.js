@@ -9,6 +9,7 @@ import NotificationScreen from "./screens/NotificationScreen";
 import SettingScreen from "./screens/SettingScreen";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
           <Stack.Screen name="Setting" component={SettingScreen} />
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
           <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

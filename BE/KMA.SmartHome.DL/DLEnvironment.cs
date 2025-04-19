@@ -175,5 +175,47 @@ namespace KMA.SmartHome.DL
                 }
             }
         }
+
+        public void ChangePassword(ChangePassword password)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string updateQuery = "UPDATE PassWord SET Password = @NewPassword WHERE Password = @OldPassword";
+                MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn);
+                updateCmd.Parameters.AddWithValue("@NewPassword", password.NewPassword);
+                updateCmd.Parameters.AddWithValue("@OldPassword", password.OldPassword);
+
+                int rowsAffected = updateCmd.ExecuteNonQuery();
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("Không thể cập nhật mật khẩu.");
+                }
+            }
+        }
+
+        public bool CheckPassword(string password)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM PassWord WHERE Password = @Password";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@Password", password);
+
+                    return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                // Log lỗi nếu cần
+                Console.WriteLine("Lỗi khi kiểm tra cửa: " + ex.Message);
+                return false;
+            }
+
+        }
     }
 }

@@ -39,10 +39,10 @@ namespace KMA.SmartHome.BL
             else
             {
                 //Log lại event
-                LogDataParam param= new LogDataParam();
-                param.ID = Guid.NewGuid().ToString(); 
+                LogDataParam param = new LogDataParam();
+                param.ID = Guid.NewGuid().ToString();
                 param.LogID = "1";
-                param.UpdateTime=DateTime.Now;
+                param.UpdateTime = DateTime.Now;
                 param.UpdateBy = "System";
 
                 InsertLog(param);
@@ -211,6 +211,19 @@ namespace KMA.SmartHome.BL
         public static void DeleteAlert()
         {
             oDL.DeleteAlert();
+        }
+
+        public static bool ChangePassword(ChangePassword password)
+        {
+            if (oDL.CheckPassword(password.OldPassword))
+            {
+                oDL.ChangePassword(password);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

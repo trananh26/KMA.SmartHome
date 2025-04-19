@@ -246,5 +246,27 @@ namespace KMA.SmartHome.API.Controllers
             }
             return new JsonResult(Result);
         }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePassword Password)
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                if( BLEnvironment.ChangePassword(Password))
+                {
+                    Result.OnSuccess(Result.Data, "Success");
+                }
+                else
+                {
+                    Result.OnError("Sai mật khẩu!", "203");
+                }
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve data. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
     }
 }

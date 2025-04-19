@@ -8,7 +8,7 @@ const { width } = Dimensions.get("window");
 
 export default function ChangePassword({ navigation }) {
   const { colors } = useTheme();
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [oldPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
@@ -18,7 +18,7 @@ export default function ChangePassword({ navigation }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChangePassword = async () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!oldPassword || !newPassword || !confirmPassword) {
       setError("Vui lòng điền đầy đủ thông tin");
       return;
     }
@@ -31,13 +31,13 @@ export default function ChangePassword({ navigation }) {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`${API_URL}/User/ChangePassword`, {
+      const response = await fetch(`${API_URL}/Sensor/ChangePassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          currentPassword,
+          oldPassword,
           newPassword,
         }),
       });
@@ -77,7 +77,7 @@ export default function ChangePassword({ navigation }) {
                 placeholder="Nhập mật khẩu hiện tại"
                 placeholderTextColor={colors.placeholder}
                 secureTextEntry={!showCurrentPassword}
-                value={currentPassword}
+                value={oldPassword}
                 onChangeText={setCurrentPassword}
               />
               <TouchableOpacity onPress={() => setShowCurrentPassword(!showCurrentPassword)}>
