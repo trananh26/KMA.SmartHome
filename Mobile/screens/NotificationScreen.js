@@ -3,13 +3,97 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { API_URL } from "../constants/api";
 import ErrorMessage from "../components/ErrorMessage";
+import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get("window");
 
 export default function Notification({ navigation }) {
+  const { isDarkMode } = useTheme();
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: isDarkMode ? '#1a1a1a' : '#f4f4f4',
+    },
+    header: {
+      backgroundColor: isDarkMode ? '#2a2a2a' : '#fff',
+      padding: 20,
+      paddingTop: 40,
+      borderBottomWidth: 1,
+      borderBottomColor: isDarkMode ? '#333' : '#ddd',
+    },
+    headerText: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: isDarkMode ? '#fff' : '#333',
+    },
+    content: {
+      padding: 20,
+    },
+    notificationList: {
+      flex: 1,
+    },
+    notificationItem: {
+      backgroundColor: isDarkMode ? '#2a2a2a' : '#fff',
+      padding: 15,
+      borderRadius: 10,
+      marginBottom: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    notificationIcon: {
+      marginRight: 15,
+    },
+    notificationContent: {
+      flex: 1,
+    },
+    notificationMessage: {
+      fontSize: 16,
+      color: isDarkMode ? '#fff' : '#333',
+      marginBottom: 5,
+    },
+    notificationTime: {
+      fontSize: 12,
+      color: isDarkMode ? '#ccc' : '#666',
+    },
+    emptyText: {
+      textAlign: 'center',
+      fontSize: 16,
+      color: isDarkMode ? '#ccc' : '#666',
+      marginTop: 20,
+    },
+    menu: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingVertical: 20,
+      backgroundColor: isDarkMode ? '#2a2a2a' : 'white',
+      borderTopWidth: 1,
+      borderTopColor: isDarkMode ? '#333' : '#ddd',
+      width: width,
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      paddingHorizontal: 10,
+    },
+    menuItem: {
+      alignItems: "center",
+      flex: 1,
+    },
+    menuText: {
+      fontSize: 12,
+      color: isDarkMode ? '#fff' : 'black',
+      marginTop: 4,
+    },
+  });
 
   useEffect(() => {
     fetchNotifications();
@@ -100,50 +184,46 @@ export default function Notification({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 80 }}>
-        <Text style={[styles.header, { paddingTop: 20 }]}>Thông báo</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Thông báo</Text>
+      </View>
 
-        {notifications.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Chưa có thông báo nào</Text>
+      <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 80 }}>
+        {notifications.length > 0 ? (
+          <View style={styles.notificationList}>
+            {notifications.map((notification, index) => (
+              <View key={index} style={styles.notificationItem}>
+                <View style={styles.notificationIcon}>
+                  <MaterialCommunityIcons
+                    name={getNotificationIcon(notification.logID).name}
+                    size={30}
+                    color={isDarkMode ? '#fff' : '#333'}
+                  />
+                </View>
+                <View style={styles.notificationContent}>
+                  <Text style={styles.notificationMessage}>
+                    {getNotificationMessage(notification.logID)}
+                  </Text>
+                  <Text style={styles.notificationTime}>
+                    {new Date(notification.updateTime).toLocaleString()}
+                  </Text>
+                </View>
+              </View>
+            ))}
           </View>
         ) : (
-          <View style={styles.notificationList}>
-            {notifications.map((notification, index) => {
-              const icon = getNotificationIcon(notification.logID);
-              console.log("notification:", notification);
-              return (
-                <View key={index} style={styles.notificationItem}>
-                  <MaterialCommunityIcons 
-                    name={icon.name} 
-                    size={30} 
-                    color={icon.color} 
-                    style={styles.notificationIcon}
-                  />
-                  <View style={styles.notificationContent}>
-                    <Text style={styles.notificationMessage}>
-                      {getNotificationMessage(notification.logID)}
-                    </Text>
-                    <Text style={styles.notificationTime}>
-                      {new Date(notification.updateTime).toLocaleString()}
-                    </Text>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
+          <Text style={styles.emptyText}>Không có thông báo nào</Text>
         )}
       </ScrollView>
 
-      {/* Menu */}
       <View style={styles.menu}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Home")}>
-          <FontAwesome5 name="newspaper" size={24} color="gray" />
-          <Text style={styles.menuText}>Tổng quan</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Home')}>
+          <FontAwesome5 name="home" size={24} color={isDarkMode ? '#fff' : 'gray'} />
+          <Text style={styles.menuText}>Trang chủ</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Control")}>
-          <FontAwesome5 name="chart-bar" size={24} color="gray" />
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Control')}>
+          <FontAwesome5 name="sliders-h" size={24} color={isDarkMode ? '#fff' : 'gray'} />
           <Text style={styles.menuText}>Điều khiển</Text>
         </TouchableOpacity>
 
@@ -152,96 +232,11 @@ export default function Notification({ navigation }) {
           <Text style={styles.menuText}>Thông báo</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Setting")}>
-          <FontAwesome5 name="cog" size={24} color="gray" />
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Setting')}>
+          <FontAwesome5 name="cog" size={24} color={isDarkMode ? '#fff' : 'gray'} />
           <Text style={styles.menuText}>Cài đặt</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#f4f4f4",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  emptyContainer: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 200,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: "#6c757d",
-    textAlign: "center",
-  },
-  notificationList: {
-    marginTop: 10,
-  },
-  notificationItem: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  notificationIcon: {
-    marginRight: 15,
-  },
-  notificationContent: {
-    flex: 1,
-  },
-  notificationMessage: {
-    fontSize: 16,
-    color: "#343a40",
-    marginBottom: 5,
-  },
-  notificationTime: {
-    fontSize: 12,
-    color: "#6c757d",
-  },
-  menu: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 20,
-    backgroundColor: "white",
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
-    width: width,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 10,
-  },
-  menuItem: {
-    alignItems: "center",
-    flex: 1,
-  },
-  menuText: {
-    fontSize: 12,
-    color: "black",
-    marginTop: 4,
-  },
-}); 
+} 

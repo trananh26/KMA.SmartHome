@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Switch } from "react-native";
-import { FontAwesome5, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { API_URL } from "../constants/api";
 import ErrorMessage from "../components/ErrorMessage";
+import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get("window");
 
 export default function Control({ navigation }) {
+  const { isDarkMode } = useTheme();
   const [devices, setDevices] = useState({
     door: false,
     fan: false,
@@ -15,6 +17,80 @@ export default function Control({ navigation }) {
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: isDarkMode ? '#1a1a1a' : '#f4f4f4',
+    },
+    header: {
+      backgroundColor: isDarkMode ? '#2a2a2a' : '#fff',
+      padding: 20,
+      paddingTop: 40,
+      borderBottomWidth: 1,
+      borderBottomColor: isDarkMode ? '#333' : '#ddd',
+    },
+    headerText: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: isDarkMode ? '#fff' : '#333',
+    },
+    content: {
+      padding: 20,
+    },
+    deviceGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+    },
+    deviceCard: {
+      width: (width - 60) / 2,
+      backgroundColor: isDarkMode ? '#2a2a2a' : '#fff',
+      padding: 20,
+      borderRadius: 10,
+      alignItems: 'center',
+      marginBottom: 20,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    deviceName: {
+      fontSize: 16,
+      fontWeight: '600',
+      marginTop: 10,
+      color: isDarkMode ? '#fff' : '#333',
+    },
+    deviceStatus: {
+      fontSize: 14,
+      color: isDarkMode ? '#ccc' : '#666',
+      marginTop: 5,
+    },
+    menu: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingVertical: 20,
+      backgroundColor: isDarkMode ? '#2a2a2a' : 'white',
+      borderTopWidth: 1,
+      borderTopColor: isDarkMode ? '#333' : '#ddd',
+      width: width,
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      paddingHorizontal: 10,
+    },
+    menuItem: {
+      alignItems: "center",
+      flex: 1,
+    },
+    menuText: {
+      fontSize: 12,
+      color: isDarkMode ? '#fff' : 'black',
+      marginTop: 4,
+    },
+  });
 
   useEffect(() => {
     fetchDeviceState();
@@ -134,145 +210,97 @@ export default function Control({ navigation }) {
     );
   }
 
-  const DeviceControl = ({ title, icon, device, color }) => (
-    <View style={styles.deviceContainer}>
-      <View style={styles.deviceInfo}>
-        <MaterialCommunityIcons 
-          name={icon} 
-          size={30} 
-          color={color} 
-        />
-        <Text style={styles.deviceTitle}>{title}</Text>
-      </View>
-      <Switch
-        value={devices[device]}
-        onValueChange={() => toggleDevice(device)}
-        trackColor={{ false: "#767577", true: color }}
-        thumbColor={devices[device] ? "#fff" : "#f4f3f4"}
-        ios_backgroundColor="#3e3e3e"
-      />
-    </View>
-  );
-
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 80 }}>
-        <Text style={[styles.header, { paddingTop: 20 }]}>Điều khiển thiết bị</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Điều khiển thiết bị</Text>
+      </View>
 
-        <View style={styles.section}>
-          <DeviceControl
-            title="Cửa"
-            icon={devices.door ? "door-open" : "door-closed"}
-            device="door"
-            color="#28a745"
-          />
-          <DeviceControl
-            title="Quạt"
-            icon="fan"
-            device="fan"
-            color="#17a2b8"
-          />
-          <DeviceControl
-            title="Đèn"
-            icon={devices.lamp ? "lightbulb-on" : "lightbulb-off"}
-            device="lamp"
-            color="#ffc107"
-          />
-          <DeviceControl
-            title="Còi"
-            icon="alarm"
-            device="alarm"
-            color="#dc3545"
-          />
+      <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 80 }}>
+        <View style={styles.deviceGrid}>
+          <TouchableOpacity 
+            style={styles.deviceCard}
+            onPress={() => toggleDevice('door')}
+          >
+            <FontAwesome5 
+              name="door-open" 
+              size={30} 
+              color={devices.door ? '#28a745' : (isDarkMode ? '#fff' : '#333')} 
+            />
+            <Text style={styles.deviceName}>Cửa</Text>
+            <Text style={styles.deviceStatus}>
+              {devices.door ? 'Đang mở' : 'Đang đóng'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.deviceCard}
+            onPress={() => toggleDevice('fan')}
+          >
+            <FontAwesome5 
+              name="fan" 
+              size={30} 
+              color={devices.fan ? '#28a745' : (isDarkMode ? '#fff' : '#333')} 
+            />
+            <Text style={styles.deviceName}>Quạt</Text>
+            <Text style={styles.deviceStatus}>
+              {devices.fan ? 'Đang bật' : 'Đang tắt'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.deviceCard}
+            onPress={() => toggleDevice('lamp')}
+          >
+            <FontAwesome5 
+              name="lightbulb" 
+              size={30} 
+              color={devices.lamp ? '#28a745' : (isDarkMode ? '#fff' : '#333')} 
+            />
+            <Text style={styles.deviceName}>Đèn</Text>
+            <Text style={styles.deviceStatus}>
+              {devices.lamp ? 'Đang bật' : 'Đang tắt'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.deviceCard}
+            onPress={() => toggleDevice('alarm')}
+          >
+            <FontAwesome5 
+              name="bell" 
+              size={30} 
+              color={devices.alarm ? '#28a745' : (isDarkMode ? '#fff' : '#333')} 
+            />
+            <Text style={styles.deviceName}>Báo động</Text>
+            <Text style={styles.deviceStatus}>
+              {devices.alarm ? 'Đang bật' : 'Đang tắt'}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
-      {/* Menu */}
       <View style={styles.menu}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Home")}>
-          <FontAwesome5 name="newspaper" size={24} color="gray" />
-          <Text style={styles.menuText}>Tổng quan</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Home')}>
+          <FontAwesome5 name="home" size={24} color={isDarkMode ? '#fff' : 'gray'} />
+          <Text style={styles.menuText}>Trang chủ</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <FontAwesome5 name="chart-bar" size={24} color="blue" />
+          <FontAwesome5 name="sliders-h" size={24} color="blue" />
           <Text style={styles.menuText}>Điều khiển</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notification")}>
-          <FontAwesome5 name="bell" size={24} color="gray" />
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Notification')}>
+          <FontAwesome5 name="bell" size={24} color={isDarkMode ? '#fff' : 'gray'} />
           <Text style={styles.menuText}>Thông báo</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Setting")}>
-          <FontAwesome5 name="cog" size={24} color="gray" />
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Setting')}>
+          <FontAwesome5 name="cog" size={24} color={isDarkMode ? '#fff' : 'gray'} />
           <Text style={styles.menuText}>Cài đặt</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#f4f4f4",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  section: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  deviceContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  deviceInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  deviceTitle: {
-    fontSize: 18,
-    marginLeft: 15,
-    color: "#343a40",
-  },
-  menu: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 20,
-    backgroundColor: "white",
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
-    width: width,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 10,
-  },
-  menuItem: {
-    alignItems: "center",
-    flex: 1,
-  },
-  menuText: {
-    fontSize: 12,
-    color: "black",
-    marginTop: 4,
-  },
-}); 
+} 

@@ -13,7 +13,7 @@ export const ThemeProvider = ({ children }) => {
   const loadTheme = async () => {
     try {
       const savedTheme = await AsyncStorage.getItem('theme');
-      if (savedTheme) {
+      if (savedTheme !== null) {
         setIsDarkMode(savedTheme === 'dark');
       }
     } catch (error) {

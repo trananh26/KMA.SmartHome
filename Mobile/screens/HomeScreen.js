@@ -4,10 +4,12 @@ import { FontAwesome5, MaterialCommunityIcons, Ionicons } from "@expo/vector-ico
 import { API_URL } from "../constants/api";
 import ErrorMessage from "../components/ErrorMessage";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get("window");
 
 export default function Home({ navigation, route }) {
+  const { colors } = useTheme();
   const [data, setData] = useState({
     temp: 0,
     hum: 0,
@@ -21,7 +23,7 @@ export default function Home({ navigation, route }) {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userInfo, setUserInfo] = useState(null);
-  console.log("xxxx:", userInfo[0].fullName)
+
   useEffect(() => {
     fetchData();
     const interval = setInterval(fetchData, 5000);
@@ -85,25 +87,25 @@ export default function Home({ navigation, route }) {
 
   if (error) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <ErrorMessage 
           message={error} 
           onRetry={fetchData} 
         />
-        <View style={styles.menu}>
+        <View style={[styles.menu, { backgroundColor: colors.card, borderTopColor: colors.border }]}>
           <TouchableOpacity style={styles.menuItem}>
-            <FontAwesome5 name="newspaper" size={24} color="blue" />
-            <Text style={styles.menuText}>Tổng quan</Text>
+            <FontAwesome5 name="newspaper" size={24} color={colors.primary} />
+            <Text style={[styles.menuText, { color: colors.text }]}>Tổng quan</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Control")}>
-            <FontAwesome5 name="chart-bar" size={24} color="gray" />
-            <Text style={styles.menuText}>Điều khiển</Text>
+            <FontAwesome5 name="chart-bar" size={24} color={colors.secondary} />
+            <Text style={[styles.menuText, { color: colors.text }]}>Điều khiển</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notification")}>
-            <FontAwesome5 name="bell" size={24} color="gray" />
-            <Text style={styles.menuText}>Thông báo</Text>
+            <FontAwesome5 name="bell" size={24} color={colors.secondary} />
+            <Text style={[styles.menuText, { color: colors.text }]}>Thông báo</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -124,94 +126,93 @@ export default function Home({ navigation, route }) {
   };
 
   return (
-    
-    <View style={styles.container} >
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}      
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
         <View style={styles.headerTop}>
           <View>
-            <Text style={styles.greeting}>
-              Xin chào, {userInfo[0].fullName || 'Người dùng'}
+            <Text style={[styles.greeting, { color: colors.text }]}>
+              Xin chào, {userInfo?.fullName || 'Người dùng'}
             </Text>
-            <Text style={styles.dateTime}>{formatDate(currentTime)}</Text>
+            <Text style={[styles.dateTime, { color: colors.secondary }]}>{formatDate(currentTime)}</Text>
           </View>
           <View style={styles.headerIcons}>
-            <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate("Notification")}>
-              <Ionicons name="notifications-outline" size={24} color="#333" />
+            <TouchableOpacity style={[styles.iconButton, { backgroundColor: colors.card }]} onPress={() => navigation.navigate("Notification")}>
+              <Ionicons name="notifications-outline" size={24} color={colors.text} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate("Setting")}>
-              <Ionicons name="settings-outline" size={24} color="#333" />
+            <TouchableOpacity style={[styles.iconButton, { backgroundColor: colors.card }]} onPress={() => navigation.navigate("Setting")}>
+              <Ionicons name="settings-outline" size={24} color={colors.text} />
             </TouchableOpacity>
           </View>
         </View>
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 80 }}>
-        <Text style={styles.title}>Môi trường</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Môi trường</Text>
         <View style={styles.row}>
-          <View style={[styles.card, styles.cardLarge]}>
+          <View style={[styles.card, styles.cardLarge, { backgroundColor: colors.card }]}>
             <MaterialCommunityIcons name="thermometer" size={30} color="#dc3545" />
-            <Text style={styles.title}>Nhiệt độ</Text>
-            <Text style={styles.value}>{data.temp}°C</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Nhiệt độ</Text>
+            <Text style={[styles.value, { color: colors.secondary }]}>{data.temp}°C</Text>
           </View>
-          <View style={[styles.card, styles.cardLarge]}>
+          <View style={[styles.card, styles.cardLarge, { backgroundColor: colors.card }]}>
             <MaterialCommunityIcons name="water" size={30} color="#17a2b8" />
-            <Text style={styles.title}>Độ ẩm</Text>
-            <Text style={styles.value}>{data.hum}%</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Độ ẩm</Text>
+            <Text style={[styles.value, { color: colors.secondary }]}>{data.hum}%</Text>
           </View>
         </View>
 
         <View style={styles.row}>
-          <View style={[styles.card, { width: width - 40}]}>
+          <View style={[styles.card, { width: width - 40, backgroundColor: colors.card }]}>
             <MaterialCommunityIcons name="gas-cylinder" size={30} color="#ffc107" />
-            <Text style={styles.title}>Khí gas</Text>
-            <Text style={styles.value}>{data.gas}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Khí gas</Text>
+            <Text style={[styles.value, { color: colors.secondary }]}>{data.gas}</Text>
           </View>
         </View>
 
-        <Text style={styles.title}>Trạng thái mạng</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Trạng thái mạng</Text>
         <View style={styles.row}>
-          <View style={[styles.card, styles.cardLarge]}>
+          <View style={[styles.card, styles.cardLarge, { backgroundColor: colors.card }]}>
             <MaterialCommunityIcons name="wifi" size={30} color={data.net1 === 1 ? "#28a745" : "#dc3545"} />
-            <Text style={styles.title}>Lưu lượng mạng</Text>
-            <Text style={styles.value}>{data.net1}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Lưu lượng mạng</Text>
+            <Text style={[styles.value, { color: colors.secondary }]}>{data.net1}</Text>
           </View>
-          <View style={[styles.card, styles.cardLarge]}>
+          <View style={[styles.card, styles.cardLarge, { backgroundColor: colors.card }]}>
             <MaterialCommunityIcons name="wifi" size={30} color={data.net2 === 1 ? "#28a745" : "#dc3545"} />
-            <Text style={styles.title}>Lưu lượng tổng</Text>
-            <Text style={styles.value}>{data.net2}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Lưu lượng tổng</Text>
+            <Text style={[styles.value, { color: colors.secondary }]}>{data.net2}</Text>
           </View>
         </View>
 
         <View style={styles.row}>
-          <View style={[styles.card, { width: width - 40 }]}>
+          <View style={[styles.card, { width: width - 40, backgroundColor: colors.card }]}>
             <MaterialCommunityIcons name="clock" size={30} color="#6c757d" />
-            <Text style={styles.title}>Cập nhật lần cuối</Text>
-            <Text style={styles.value}>{new Date(data.updateTime).toLocaleString()}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Cập nhật lần cuối</Text>
+            <Text style={[styles.value, { color: colors.secondary }]}>{new Date(data.updateTime).toLocaleString()}</Text>
           </View>
         </View>
       </ScrollView>
 
       {/* Menu */}
-      <View style={styles.menu}>
+      <View style={[styles.menu, { backgroundColor: colors.card, borderTopColor: colors.border }]}>
         <TouchableOpacity style={styles.menuItem}>
-          <FontAwesome5 name="newspaper" size={24} color="blue" />
-          <Text style={styles.menuText}>Tổng quan</Text>
+          <FontAwesome5 name="newspaper" size={24} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Tổng quan</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Control")}>
-          <FontAwesome5 name="chart-bar" size={24} color="gray" />
-          <Text style={styles.menuText}>Điều khiển</Text>
+          <FontAwesome5 name="chart-bar" size={24} color={colors.secondary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Điều khiển</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notification")}>
-          <FontAwesome5 name="bell" size={24} color="gray" />
-          <Text style={styles.menuText}>Thông báo</Text>
+          <FontAwesome5 name="bell" size={24} color={colors.secondary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Thông báo</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Setting")}>
-          <FontAwesome5 name="cog" size={24} color="gray" />
-          <Text style={styles.menuText}>Cài đặt</Text>
+          <FontAwesome5 name="cog" size={24} color={colors.secondary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Cài đặt</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -221,14 +222,11 @@ export default function Home({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f4f4f4",
   },
   header: {
-    backgroundColor: "#fff",
     padding: 20,
     paddingTop: 40,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
   },
   headerTop: {
     flexDirection: "row",
@@ -238,11 +236,9 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
   },
   dateTime: {
     fontSize: 14,
-    color: "#666",
     marginTop: 5,
   },
   headerIcons: {
@@ -252,13 +248,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     padding: 8,
     borderRadius: 20,
-    backgroundColor: "#f0f0f0",
   },
   scrollView: {
     padding: 20,
   },
   card: {
-    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
     alignItems: "center",
@@ -284,15 +278,12 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    color: "gray",
   },
   menu: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 20,
-    backgroundColor: "white",
     borderTopWidth: 1,
-    borderTopColor: "#ddd",
     width: width,
     position: "absolute",
     bottom: 0,
@@ -306,7 +297,6 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 12,
-    color: "black",
     marginTop: 4,
   },
   row: {
