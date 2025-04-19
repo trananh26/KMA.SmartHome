@@ -21,7 +21,7 @@ export default function Home({ navigation, route }) {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userInfo, setUserInfo] = useState(null);
-
+  console.log("xxxx:", userInfo[0].fullName)
   useEffect(() => {
     fetchData();
     const interval = setInterval(fetchData, 5000);
@@ -71,10 +71,11 @@ export default function Home({ navigation, route }) {
       const userData = await AsyncStorage.getItem('userInfo');
       if (userData) {
         const parsedData = JSON.parse(userData);
-        if (parsedData && parsedData.fullName) {
+        // Kiểm tra nếu dữ liệu là mảng
+        if (Array.isArray(parsedData) && parsedData.length > 0) {
+          setUserInfo(parsedData[0]);
+        } else if (parsedData && typeof parsedData === 'object') {
           setUserInfo(parsedData);
-        } else {
-          console.error('Invalid user data format');
         }
       }
     } catch (error) {
@@ -123,12 +124,15 @@ export default function Home({ navigation, route }) {
   };
 
   return (
+    
     <View style={styles.container} >
       {/* Header */}      
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <View>
-            <Text style={styles.greeting}>Xin chào, {userInfo?.fullName || 'Người dùng'}</Text>
+            <Text style={styles.greeting}>
+              Xin chào, {userInfo[0].fullName || 'Người dùng'}
+            </Text>
             <Text style={styles.dateTime}>{formatDate(currentTime)}</Text>
           </View>
           <View style={styles.headerIcons}>

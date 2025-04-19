@@ -6,8 +6,8 @@ import { API_URL } from "../constants/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("ttanh3");
+  const [password, setPassword] = useState("123123");
   const [secureText, setSecureText] = useState(true);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -22,7 +22,7 @@ const LoginScreen = ({ navigation }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/User/Login`, {
+      const response = await fetch(`${API_URL}/Account/Login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,9 +35,8 @@ const LoginScreen = ({ navigation }) => {
 
       const json = await response.json();
       if (json.code === "200") {
-        // Lưu thông tin người dùng vào AsyncStorage
+        // Lưu dữ liệu người dùng
         await AsyncStorage.setItem('userInfo', JSON.stringify(json.data));
-        // Chuyển sang màn hình Home và truyền thông tin người dùng
         navigation.navigate("Home", { userInfo: json.data });
       } else {
         setAlertMessage(json.message || "Đăng nhập thất bại");
