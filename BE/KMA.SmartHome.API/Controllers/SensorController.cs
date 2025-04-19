@@ -140,7 +140,7 @@ namespace KMA.SmartHome.API.Controllers
         }
 
         [HttpPost("DoorClose")]
-        public async Task<IActionResult> DoorClose()
+        public async Task<IActionResult> DoorClose([FromBody] DoorCheck Password)
         {
             var Result = new ServiceResult();
             try
@@ -222,6 +222,22 @@ namespace KMA.SmartHome.API.Controllers
             try
             {
                 BLEnvironment.DeleteAlert();
+                Result.OnSuccess(Result.Data, "Success");
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve data. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
+
+        [HttpGet("GetEqiupmentState")]
+        public async Task<IActionResult> GetRealEqiupmentState()
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                Result.Data = BLEnvironment.GetRealEqiupmentState();
                 Result.OnSuccess(Result.Data, "Success");
             }
             catch (Exception)

@@ -23,12 +23,12 @@ namespace KMA.SmartHome.BL
             {
                 Eqiupment eqiupment;
                 eqiupment = new Eqiupment();
-                eqiupment.EquipmentID = "Door";
+                eqiupment.EquipmentID = "door";
                 eqiupment.EquipmentState = 1;
                 Control(eqiupment);
 
                 eqiupment = new Eqiupment();
-                eqiupment.EquipmentID = "Lamp";
+                eqiupment.EquipmentID = "lamp";
                 eqiupment.EquipmentState = 1;
                 Control(eqiupment);
 
@@ -60,16 +60,16 @@ namespace KMA.SmartHome.BL
             RealEqiupment _eq = new RealEqiupment();
             _eq = GetRealEqiupmentState();
 
-            if (param.EquipmentID == "Door")
+            if (param.EquipmentID == "door")
                 _eq.Door = param.EquipmentState;
 
-            if (param.EquipmentID == "Fan")
+            if (param.EquipmentID == "fan")
                 _eq.Fan = param.EquipmentState;
 
-            if (param.EquipmentID == "Lamp")
+            if (param.EquipmentID == "lamp")
                 _eq.Lamp = param.EquipmentState;
 
-            if (param.EquipmentID == "Alarm")
+            if (param.EquipmentID == "alarm")
                 _eq.Alarm = param.EquipmentState;
 
             oDC.Control(_eq);
@@ -77,7 +77,7 @@ namespace KMA.SmartHome.BL
             //Log event
         }
 
-        private static RealEqiupment GetRealEqiupmentState()
+        public static RealEqiupment GetRealEqiupmentState()
         {
             return oDC.GetEqiupmentstate();
         }
@@ -98,12 +98,12 @@ namespace KMA.SmartHome.BL
                 // Còi kêu, quạt quay
                 Eqiupment eqiupment;
                 eqiupment = new Eqiupment();
-                eqiupment.EquipmentID = "Fan";
+                eqiupment.EquipmentID = "fan";
                 eqiupment.EquipmentState = 1;
                 Control(eqiupment);
 
                 eqiupment = new Eqiupment();
-                eqiupment.EquipmentID = "Alarm";
+                eqiupment.EquipmentID = "alarm";
                 eqiupment.EquipmentState = 1;
                 Control(eqiupment);
 
@@ -116,7 +116,7 @@ namespace KMA.SmartHome.BL
 
                 InsertLog(log);
             }
-            if (param.Temp > 30)
+            if (param.Temp > 35)
             {
                 //Log lại event
                 LogDataParam log = new LogDataParam();
@@ -127,7 +127,7 @@ namespace KMA.SmartHome.BL
 
                 InsertLog(log);
             }
-            if (param.Hum > 80)
+            if (param.Hum > 90)
             {
                 //Log lại event
                 LogDataParam log = new LogDataParam();
@@ -149,12 +149,12 @@ namespace KMA.SmartHome.BL
         {
             Eqiupment eqiupment;
             eqiupment = new Eqiupment();
-            eqiupment.EquipmentID = "Door";
+            eqiupment.EquipmentID = "door";
             eqiupment.EquipmentState = 0;
             Control(eqiupment);
 
             eqiupment = new Eqiupment();
-            eqiupment.EquipmentID = "Lamp";
+            eqiupment.EquipmentID = "lamp";
             eqiupment.EquipmentState = 0;
             Control(eqiupment);
         }
@@ -163,12 +163,12 @@ namespace KMA.SmartHome.BL
         {
             Eqiupment eqiupment;
             eqiupment = new Eqiupment();
-            eqiupment.EquipmentID = "Fan";
+            eqiupment.EquipmentID = "fan";
             eqiupment.EquipmentState = 0;
             Control(eqiupment);
 
             eqiupment = new Eqiupment();
-            eqiupment.EquipmentID = "Alarm";
+            eqiupment.EquipmentID = "alarm";
             eqiupment.EquipmentState = 0;
             Control(eqiupment);
 

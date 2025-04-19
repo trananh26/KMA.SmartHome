@@ -13,7 +13,8 @@ namespace KMA.SmartHome.Common
         public double? Temp { get; set; }
         public double? Hum { get; set; }
         public double? Gas { get; set; }
-        public double? Net { get; set; }
+        public double? Net1 { get; set; }
+        public double? Net2 { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string? UpdateBy { get; set; }
     }

@@ -90,7 +90,8 @@ namespace KMA.SmartHome.DL
                         Temp = (double)reader["Temp"],
                         Hum = (double)reader["Hum"],
                         Gas = (double)reader["Gas"],
-                        Net = (double)reader["Net"],
+                        Net1 = (double)reader["Net1"],
+                        Net2 = (double)reader["Net2"],
                         UpdateTime = (DateTime)reader["UpdateTime"]
                     });
                 }
@@ -109,7 +110,8 @@ namespace KMA.SmartHome.DL
                 cmd.Parameters.AddWithValue("@p_Temp", param.Temp);
                 cmd.Parameters.AddWithValue("@p_Hum", param.Hum);
                 cmd.Parameters.AddWithValue("@p_Gas", param.Gas);
-                cmd.Parameters.AddWithValue("@p_Net", param.Net);
+                cmd.Parameters.AddWithValue("@p_Net1", param.Net1);
+                cmd.Parameters.AddWithValue("@p_Net2", param.Net2);
                 cmd.Parameters.AddWithValue("@p_UpdateTime", param.UpdateTime);
                 cmd.Parameters.AddWithValue("@p_UpdateBy", param.UpdateBy);
 

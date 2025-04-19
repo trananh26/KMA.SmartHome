@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KMA.SmartHome.UI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ce2b461502f426494c6f309f2c5ba7b93c4d0b30")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b321281e8d925cee2b1e3e02160c8ccb21b16d02")]
 [assembly: System.Reflection.AssemblyProductAttribute("KMA.SmartHome.UI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KMA.SmartHome.UI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
