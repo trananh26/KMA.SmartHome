@@ -27,6 +27,7 @@ namespace KMA.SmartHome.DL
                         UserName = reader["UserName"].ToString(),
                         FullName = reader["FullName"].ToString(),
                         Address = reader["Address"].ToString(),
+                        Email = reader["Email"].ToString(),
                         PhoneNumber = reader["PhoneNumber"].ToString()
                     });
                 }

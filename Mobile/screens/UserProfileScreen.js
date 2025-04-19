@@ -1,190 +1,166 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, TextInput, Alert } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { API_URL } from "../constants/api";
-import ErrorMessage from "../components/ErrorMessage";
+import { useTheme } from '../context/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get("window");
 
-export default function UserProfile({ navigation }) {
+export default function UserProfile({ navigation, route }) {
+  const { colors } = useTheme();
   const [userInfo, setUserInfo] = useState({
     username: "",
     fullName: "",
     email: "",
-    phone: ""
+    phoneNumber: ""
   });
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchUserInfo();
+    loadUserInfo();
   }, []);
 
-  const fetchUserInfo = async () => {
+  const loadUserInfo = async () => {
     try {
-      setLoading(true);
-      setError(null);
-      const response = await fetch(`${API_URL}/User/GetUserInfo`);
-      if (!response.ok) {
-        throw new Error('Không thể kết nối đến máy chủ');
-      }
-      const json = await response.json();
-      
-      if (json.code === "200" && json.data) {
-        setUserInfo(json.data);
-      } else {
-        throw new Error(json.message || 'Không có dữ liệu');
+      const userData = await AsyncStorage.getItem('userInfo');
+      if (userData) {
+        const parsedData = JSON.parse(userData);
+        // Kiểm tra nếu dữ liệu là mảng
+        if (Array.isArray(parsedData) && parsedData.length > 0) {
+          setUserInfo(parsedData[0]);
+        } else if (parsedData && typeof parsedData === 'object') {
+          setUserInfo(parsedData);
+        }
       }
     } catch (error) {
-      console.error("Error fetching user info:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      console.error('Error loading user info:', error);
+      setError('Không thể tải thông tin người dùng');
     }
   };
 
   const handleUpdate = async () => {
+    if (!userInfo.fullName || !userInfo.email || !userInfo.phoneNumber) {
+      setError("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
       const response = await fetch(`${API_URL}/User/UpdateUserInfo`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(userInfo)
+        body: JSON.stringify({
+          fullName: userInfo.fullName,
+          email: userInfo.email,
+          phoneNumber: userInfo.phoneNumber
+        }),
       });
-      
-      if (!response.ok) {
-        throw new Error('Không thể kết nối đến máy chủ');
-      }
-      
+
       const json = await response.json();
       if (json.code === "200") {
-        Alert.alert("Thành công", "Cập nhật thông tin thành công");
+        Alert.alert("Thành công", "Cập nhật thông tin thành công", [
+          { text: "OK", onPress: () => navigation.goBack() },
+        ]);
       } else {
-        throw new Error(json.message || 'Cập nhật thất bại');
+        setError(json.message || "Cập nhật thông tin thất bại");
       }
     } catch (error) {
-      console.error("Error updating user info:", error);
-      setError(error.message);
+      setError("Không thể kết nối đến máy chủ");
     } finally {
       setLoading(false);
     }
   };
 
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <ErrorMessage 
-          message={error} 
-          onRetry={fetchUserInfo} 
-        />
-        <View style={styles.menu}>
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Home")}>
-            <FontAwesome5 name="newspaper" size={24} color="gray" />
-            <Text style={styles.menuText}>Tổng quan</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Control")}>
-            <FontAwesome5 name="chart-bar" size={24} color="gray" />
-            <Text style={styles.menuText}>Điều khiển</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notification")}>
-            <FontAwesome5 name="bell" size={24} color="gray" />
-            <Text style={styles.menuText}>Thông báo</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Setting")}>
-            <FontAwesome5 name="cog" size={24} color="blue" />
-            <Text style={styles.menuText}>Cài đặt</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 80 }}>
-        <Text style={[styles.header, { paddingTop: 20 }]}>Thông tin tài khoản</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Thông tin tài khoản</Text>
+        <View style={{ width: 24 }} />
+      </View>
 
-        <View style={styles.section}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Tên đăng nhập</Text>
+      <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 80 }}>
+        <View style={[styles.card, { backgroundColor: colors.card }]}>
+
+          <View style={styles.inputContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>Tên đăng nhập</Text>
             <TextInput
-              style={styles.input}
-              value={userInfo.username}
-              onChangeText={(text) => setUserInfo({...userInfo, username: text})}
+              style={[styles.input, { backgroundColor: colors.background, borderColor: colors.border, color: colors.text }]}
               placeholder="Nhập tên đăng nhập"
+              placeholderTextColor={colors.placeholder}
+              value={userInfo.userName}
+              onChangeText={(text) => setUserInfo({...userInfo, userName: text})}
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Họ và tên</Text>
+          <View style={styles.inputContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>Họ và tên</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.background, borderColor: colors.border, color: colors.text }]}
+              placeholder="Nhập họ và tên"
+              placeholderTextColor={colors.placeholder}
               value={userInfo.fullName}
               onChangeText={(text) => setUserInfo({...userInfo, fullName: text})}
-              placeholder="Nhập họ và tên"
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
+          <View style={styles.inputContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>Email</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.background, borderColor: colors.border, color: colors.text }]}
+              placeholder="Nhập email"
+              placeholderTextColor={colors.placeholder}
               value={userInfo.email}
               onChangeText={(text) => setUserInfo({...userInfo, email: text})}
-              placeholder="Nhập email"
-              keyboardType="email-address"
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Số điện thoại</Text>
+          <View style={styles.inputContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>Số điện thoại</Text>
             <TextInput
-              style={styles.input}
-              value={userInfo.phone}
-              onChangeText={(text) => setUserInfo({...userInfo, phone: text})}
+              style={[styles.input, { backgroundColor: colors.background, borderColor: colors.border, color: colors.text }]}
               placeholder="Nhập số điện thoại"
-              keyboardType="phone-pad"
+              placeholderTextColor={colors.placeholder}
+              value={userInfo.phoneNumber}
+              onChangeText={(text) => setUserInfo({...userInfo, phoneNumber: text})}
             />
           </View>
 
-          <TouchableOpacity 
-            style={styles.updateButton}
-            onPress={handleUpdate}
-            disabled={loading}
-          >
-            <Text style={styles.updateButtonText}>
-              {loading ? "Đang cập nhật..." : "Cập nhật"}
-            </Text>
-          </TouchableOpacity>
+          {error && (
+            <Text style={styles.errorText}>{error}</Text>
+          )}
+
+        
         </View>
       </ScrollView>
 
       {/* Menu */}
-      <View style={styles.menu}>
+      <View style={[styles.menu, { backgroundColor: colors.card, borderTopColor: colors.border }]}>
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Home")}>
-          <FontAwesome5 name="newspaper" size={24} color="gray" />
-          <Text style={styles.menuText}>Tổng quan</Text>
+          <FontAwesome5 name="newspaper" size={24} color={colors.secondary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Tổng quan</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Control")}>
-          <FontAwesome5 name="chart-bar" size={24} color="gray" />
-          <Text style={styles.menuText}>Điều khiển</Text>
+          <FontAwesome5 name="chart-bar" size={24} color={colors.secondary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Điều khiển</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notification")}>
-          <FontAwesome5 name="bell" size={24} color="gray" />
-          <Text style={styles.menuText}>Thông báo</Text>
+          <FontAwesome5 name="bell" size={24} color={colors.secondary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Thông báo</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Setting")}>
-          <FontAwesome5 name="cog" size={24} color="blue" />
-          <Text style={styles.menuText}>Cài đặt</Text>
+          <FontAwesome5 name="cog" size={24} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Cài đặt</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -194,49 +170,59 @@ export default function UserProfile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f4f4f4",
   },
   header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 20,
+    paddingTop: 40,
+    borderBottomWidth: 1,
   },
-  section: {
-    backgroundColor: "#fff",
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  scrollView: {
+    padding: 20,
+  },
+  card: {
+    padding: 20,
     borderRadius: 10,
-    padding: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  inputGroup: {
-    marginBottom: 15,
+  inputContainer: {
+    marginBottom: 20,
   },
   label: {
     fontSize: 16,
-    color: "#343a40",
-    marginBottom: 5,
+    marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 8,
+    padding: 12,
     fontSize: 16,
   },
-  updateButton: {
-    backgroundColor: "#007bff",
-    padding: 15,
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 20,
+  inputText: {
+    fontSize: 16,
+    padding: 12,
   },
-  updateButtonText: {
-    color: "#fff",
+  errorText: {
+    color: "red",
+    marginBottom: 16,
+  },
+  button: {
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -244,9 +230,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 20,
-    backgroundColor: "white",
     borderTopWidth: 1,
-    borderTopColor: "#ddd",
     width: width,
     position: "absolute",
     bottom: 0,
@@ -260,7 +244,6 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 12,
-    color: "black",
     marginTop: 4,
   },
 }); 
