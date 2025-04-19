@@ -23,6 +23,27 @@ export default function Home({ navigation, route }) {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userInfo, setUserInfo] = useState(null);
+  const [hasNewNotification, setHasNewNotification] = useState(false); // State for new notification
+
+  // Function to check for new alarms
+  const checkNewAlarms = async () => {
+    try {
+      const response = await fetch(`${API_URL}/Sensor/GetNewAlarm`);
+      if (!response.ok) {
+        // Don't throw an error here, just log it, as this is a background check
+        console.log('Failed to check for new alarms: Network error');
+        return;
+      }
+      const json = await response.json();
+      if (json.code === "200" ) {
+        setHasNewNotification(true);
+      } else {
+        setHasNewNotification(false); // Clear badge on press
+      }
+    } catch (error) {
+      console.log("Error checking new alarms:", error);
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -40,9 +61,14 @@ export default function Home({ navigation, route }) {
       loadUserInfo();
     }
 
+    // Initial check and start polling for alarms
+    checkNewAlarms();
+    const alarmInterval = setInterval(checkNewAlarms, 10000); // Check every 10 seconds
+
     return () => {
       clearInterval(interval);
       clearInterval(timeInterval);
+      clearInterval(alarmInterval); // Clear alarm interval on unmount
     };
   }, [route.params]);
 
@@ -61,7 +87,7 @@ export default function Home({ navigation, route }) {
         throw new Error(json.message || 'Không có dữ liệu');
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.log("Error fetching data:", error);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -137,10 +163,23 @@ export default function Home({ navigation, route }) {
             <Text style={[styles.dateTime, { color: colors.secondary }]}>{formatDate(currentTime)}</Text>
           </View>
           <View style={styles.headerIcons}>
-            <TouchableOpacity style={[styles.iconButton, { backgroundColor: colors.card }]} onPress={() => navigation.navigate("Notification")}>
-              <Ionicons name="notifications-outline" size={24} color={colors.text} />
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.iconButton, { backgroundColor: colors.card }]} onPress={() => navigation.navigate("Setting")}>
+             {/* Header Notification Icon with Badge */}
+             <TouchableOpacity 
+               style={[styles.iconButton, { backgroundColor: colors.card }]} 
+               onPress={() => {
+                 setHasNewNotification(false); // Clear badge on press
+                 navigation.navigate("Notification", { userInfo: userInfo });
+               }}
+             >
+               <View>
+                 <Ionicons name="notifications-outline" size={24} color={colors.text} />
+                 {hasNewNotification && <View style={styles.notificationBadge} />}
+               </View>
+             </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.iconButton, { backgroundColor: colors.card }]} 
+              onPress={() => navigation.navigate("Setting", { userInfo: userInfo })}
+            >
               <Ionicons name="settings-outline" size={24} color={colors.text} />
             </TouchableOpacity>
           </View>
@@ -205,12 +244,25 @@ export default function Home({ navigation, route }) {
           <Text style={[styles.menuText, { color: colors.text }]}>Điều khiển</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notification")}>
-          <FontAwesome5 name="bell" size={24} color={colors.secondary} />
+        {/* Menu Notification Icon with Badge */}
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={() => {
+            setHasNewNotification(false); // Clear badge on press
+            navigation.navigate("Notification", { userInfo: userInfo });
+          }}
+        >
+          <View>
+            <FontAwesome5 name="bell" size={24} color={colors.secondary} />
+            {hasNewNotification && <View style={styles.notificationBadge} />}
+          </View>
           <Text style={[styles.menuText, { color: colors.text }]}>Thông báo</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Setting")}>
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={() => navigation.navigate("Setting", { userInfo: userInfo })}
+        >
           <FontAwesome5 name="cog" size={24} color={colors.secondary} />
           <Text style={[styles.menuText, { color: colors.text }]}>Cài đặt</Text>
         </TouchableOpacity>
@@ -302,5 +354,15 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  notificationBadge: { // Style for the red dot
+    position: 'absolute',
+    right: -3,
+    top: -3,
+    backgroundColor: 'red',
+    borderRadius: 5,
+    width: 10,
+    height: 10,
+    zIndex: 10,
   },
 });

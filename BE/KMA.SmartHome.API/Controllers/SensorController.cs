@@ -182,7 +182,15 @@ namespace KMA.SmartHome.API.Controllers
             try
             {
                 Result.Data = BLEnvironment.GetNewAlarm();
-                Result.OnSuccess(Result.Data, "Success");
+                if (Result.Data is null)
+                {
+                    Result.OnError("No alert!", "203");
+                }
+                else
+                {
+                    Result.OnSuccess(Result.Data, "Success");
+                }
+
             }
             catch (Exception)
             {
@@ -253,7 +261,7 @@ namespace KMA.SmartHome.API.Controllers
             var Result = new ServiceResult();
             try
             {
-                if( BLEnvironment.ChangePassword(Password))
+                if (BLEnvironment.ChangePassword(Password))
                 {
                     Result.OnSuccess(Result.Data, "Success");
                 }

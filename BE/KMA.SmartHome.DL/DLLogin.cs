@@ -54,6 +54,7 @@ namespace KMA.SmartHome.DL
                         AccountID = reader["AccountID"].ToString(),
                         UserName = reader["Username"].ToString(),
                         FullName = reader["FullName"].ToString(),
+                        Email = reader["Email"].ToString(),
                         PhoneNumber = reader["PhoneNumber"].ToString(),
                         DateOfBirth = (DateTime)reader["DateOfBirth"],
                         Address = reader["Address"].ToString(),
@@ -69,17 +70,19 @@ namespace KMA.SmartHome.DL
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                string query = @"INSERT INTO Account (AccountID, Username, Password, FullName, PhoneNumber, DateOfBirth, Address, ProfilePicture, Position, Role, CreatedBy) 
-                                 VALUES (@AccountID, @Username, @Password, @FullName, @PhoneNumber, @DateOfBirth, @Address, @ProfilePicture, @Position, @Role, @CreatedBy)";
+                string query = @"INSERT INTO Account (AccountID, Username, Password, FullName, Email, PhoneNumber, DateOfBirth, Address, CreatedBy, UpdatedAt) 
+                                 VALUES (@AccountID, @Username, @Password, @FullName, @Email, @PhoneNumber, @DateOfBirth, @Address, @CreatedBy, @UpdateAt)";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@AccountID", user.AccountID);
                 cmd.Parameters.AddWithValue("@Username", user.UserName);
                 cmd.Parameters.AddWithValue("@Password", user.Password); // Ensure password is hashed before storing
                 cmd.Parameters.AddWithValue("@FullName", user.FullName);
+                cmd.Parameters.AddWithValue("@Email", user.Email);
                 cmd.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
                 cmd.Parameters.AddWithValue("@DateOfBirth", user.DateOfBirth);
                 cmd.Parameters.AddWithValue("@Address", user.Address);
                 cmd.Parameters.AddWithValue("@CreatedBy", user.CreatedBy);
+                cmd.Parameters.AddWithValue("@UpdateAt", DateTime.Now);
 
                 cmd.ExecuteNonQuery();
             }

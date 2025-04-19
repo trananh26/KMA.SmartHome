@@ -91,8 +91,7 @@ const LoginScreen = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      {/* <TouchableOpacity onPress={() => navigation.navigate("Register")}> */}
-        <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Register")}> 
           <Text style={styles.registerText}>Chưa có tài khoản? Đăng ký ngay</Text>
         </TouchableOpacity>
       </View> 

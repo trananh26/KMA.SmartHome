@@ -36,13 +36,22 @@ namespace KMA.SmartHome.BL
 
         public static bool Register(User user)
         {
-            if (oDL.UserExists(user.UserName, user.PhoneNumber))
+            try
             {
-                return false;
-            }
+                if (oDL.UserExists(user.UserName, user.PhoneNumber))
+                {
+                    return false;
+                }
 
-            oDL.RegisterUser(user);
-            return true;
+                oDL.RegisterUser(user);
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false; 
+            }
+            
         }
         public static void DeleteUser(string userName)
         {
