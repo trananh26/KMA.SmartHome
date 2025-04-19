@@ -55,9 +55,11 @@ const LoginScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Image source={require("../assets/logo.png")} style={styles.logo}/>
       <Text style={styles.title}></Text>
-      <TextInput
-        style={styles.input}
-        placeholder="   Tài khoản"
+      {/* Wrap controls */}
+      <View style={styles.controlsContainer}> 
+        <TextInput
+          style={styles.input}
+          placeholder="   Tài khoản"
         value={username}
         onChangeText={setUsername}
       />
@@ -90,9 +92,11 @@ const LoginScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* <TouchableOpacity onPress={() => navigation.navigate("Register")}> */}
-      <TouchableOpacity>
-        <Text style={styles.registerText}>Chưa có tài khoản? Đăng ký ngay</Text>
-      </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.registerText}>Chưa có tài khoản? Đăng ký ngay</Text>
+        </TouchableOpacity>
+      </View> 
+      {/* End wrap controls */}
 
       <CustomAlert
         visible={alertVisible}
@@ -172,5 +176,10 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     marginBottom: -40
+  },
+  controlsContainer: { // Style for the wrapper
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 120, // Push content up
   },
 });
