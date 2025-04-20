@@ -155,8 +155,8 @@ namespace KMA.SmartHome.API.Controllers
             return new JsonResult(Result);
         }
 
-        [HttpPost("AlarmStop")]
-        public async Task<IActionResult> AlarmStop()
+        [HttpPost("AlarmStop") ]
+        public async Task<IActionResult> AlarmStop([FromBody] RstAlarm Alarm)
         {
             var Result = new ServiceResult();
             try
@@ -224,7 +224,7 @@ namespace KMA.SmartHome.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("AlertStop")]
-        public async Task<IActionResult> AlertStop()
+        public async Task<IActionResult> AlertStop([FromBody] RstAlarm Alarm)
         {
             var Result = new ServiceResult();
             try

@@ -46,6 +46,11 @@ namespace KMA.SmartHome.Common
         public string? Password { get; set; }
     }
 
+    public class RstAlarm
+    {
+        public string? Alarm { get; set; }
+    }
+
     public class RealEqiupment
     {
         [JsonProperty("Door")]    //Điều hòa

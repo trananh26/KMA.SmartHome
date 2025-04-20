@@ -172,6 +172,7 @@ namespace KMA.SmartHome.BL
             eqiupment.EquipmentState = 0;
             Control(eqiupment);
 
+            oDL.DeleteAlert();
             //Log lại event
             LogDataParam param = new LogDataParam();
             param.ID = Guid.NewGuid().ToString();
