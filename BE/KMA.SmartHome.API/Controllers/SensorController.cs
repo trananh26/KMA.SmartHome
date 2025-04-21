@@ -2,6 +2,7 @@
 using KMA.SmartHome.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using KMA.SmartHome.API.Middleware;
 
 namespace KMA.SmartHome.API.Controllers
 {
@@ -273,6 +274,26 @@ namespace KMA.SmartHome.API.Controllers
             catch (Exception)
             {
                 Result.OnError("Failed to retrieve data. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
+
+        /// <summary>
+        /// Lấy thông tin dung lượng gói tin phản hồi
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetResponseSizes")]
+        public async Task<IActionResult> GetResponseSizes()
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                Result.Data = BLResponseSize.GetResponseSizes();
+                Result.OnSuccess(Result.Data, "Success");
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve response sizes. Please check the server!", "204");
             }
             return new JsonResult(Result);
         }

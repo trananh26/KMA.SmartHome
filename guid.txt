@@ -1,0 +1,11 @@
+- node js
+- react native
+- cd ./Mobile npm i
+- visual studio (2022 - express)
+- vs code
+- arduino ide
+- cmd => ipconfig => tìm ip của máy
+- thay đổi ip trong lauchSetting của BE và app.js của Mobile
+- chạy BE
+- npm start để chạy FE
+- expo go để mở mobile
