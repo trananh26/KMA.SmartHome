@@ -297,5 +297,32 @@ namespace KMA.SmartHome.API.Controllers
             }
             return new JsonResult(Result);
         }
+
+        /// <summary>
+        /// Lấy thống kê dung lượng gói tin trong 5 phút qua
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetResponseSizeStats")]
+        public async Task<IActionResult> GetResponseSizeStats()
+        {
+            var Result = new ServiceResult();
+            try
+            {
+                var (TotalSize, AverageSize) = BLEnvironment.GetResponseSizeStatsLast5Minutes();
+                Result.Data = new
+                {
+                    TotalSize = TotalSize,
+                    AverageSize = AverageSize,
+                    TotalSizeMB = Math.Round(TotalSize / (1024.0 * 1024.0), 2),
+                    AverageSizeKB = Math.Round(AverageSize / 1024.0, 2)
+                };
+                Result.OnSuccess(Result.Data, "Success");
+            }
+            catch (Exception)
+            {
+                Result.OnError("Failed to retrieve response size statistics. Please check the server!", "204");
+            }
+            return new JsonResult(Result);
+        }
     }
 }

@@ -89,6 +89,10 @@ namespace KMA.SmartHome.BL
 
         public static void InsertEnvironmentData(NodeData param)
         {
+            // Check luu luong mang
+            var (TotalSize, AverageSize) = GetResponseSizeStatsLast5Minutes();
+            param.Net2 = TotalSize;
+            param.Net1 = AverageSize;
             oDL.InsertEnvironmentData(param);
             oDC.UpdateEnvironmentData(param);
 
@@ -225,6 +229,11 @@ namespace KMA.SmartHome.BL
             {
                 return false;
             }
+        }
+
+        public static (long TotalSize, double AverageSize) GetResponseSizeStatsLast5Minutes()
+        {
+            return oDL.GetResponseSizeStatsLast5Minutes();
         }
     }
 }

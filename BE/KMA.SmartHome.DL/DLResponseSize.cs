@@ -45,5 +45,30 @@ namespace KMA.SmartHome.DL
 
             return responseSizes;
         }
+
+        public (long TotalSize, double AverageSize) GetResponseSizeStatsLast5Minutes()
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = @"
+                    SELECT 
+                        SUM(SizeInBytes) as TotalSize,
+                        AVG(SizeInBytes) as AverageSize
+                    FROM ResponseSize 
+                    WHERE Timestamp >= DATE_SUB(NOW(), INTERVAL 5 MINUTE)";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                using MySqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    long totalSize = reader["TotalSize"] == DBNull.Value ? 0 : Convert.ToInt64(reader["TotalSize"]);
+                    double averageSize = reader["AverageSize"] == DBNull.Value ? 0 : Convert.ToDouble(reader["AverageSize"]);
+                    return (totalSize, averageSize);
+                }
+            }
+
+            return (0, 0);
+        }
     }
 } 

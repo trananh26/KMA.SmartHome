@@ -16,5 +16,10 @@ namespace KMA.SmartHome.BL
         {
             return oDL.GetResponseSizes();
         }
+
+        public static (long TotalSize, double AverageSize) GetResponseSizeStatsLast5Minutes()
+        {
+            return oDL.GetResponseSizeStatsLast5Minutes();
+        }
     }
 } 
